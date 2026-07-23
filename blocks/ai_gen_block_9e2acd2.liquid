@@ -1,0 +1,268 @@
+{% doc %}
+  @prompt
+    Create a scrolling marquee logo bar section with a solid hot pink/magenta background color. The bar should display a horizontal row of brand/partner logos (image uploads) that continuously scroll from right to left in an infinite loop. The marquee should be smooth and seamless — when the logos reach the end, they loop back without any jump. Include settings for: background color, scroll speed, and the ability to add multiple logo images. The logos should be white/light colored to contrast against the pink background, displayed at a consistent height (around 30-40px tall), and evenly spaced. The overall look is sleek, modern, and retail/grocery brand partnership style., make it so it autoloops with all of them and there is no glitch, i only want 6 logos but I want to be able to add more down the road, also wouldbe nice if I could change all logo colors to white
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-logo-marquee-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.vertical_padding }}px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-logo-marquee-track-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.logo_spacing }}px;
+    width: fit-content;
+  }
+
+  .ai-logo-marquee-group-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.logo_spacing }}px;
+    flex-shrink: 0;
+    animation: ai-logo-marquee-scroll-{{ ai_gen_id }} {{ block.settings.scroll_speed }}s linear infinite;
+    will-change: transform;
+  }
+
+  .ai-logo-marquee-item-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: {{ block.settings.logo_height }}px;
+  }
+
+  .ai-logo-marquee-item-{{ ai_gen_id }} img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    {% if block.settings.logo_color_filter %}
+      filter: brightness(0) invert(1);
+    {% endif %}
+  }
+
+  .ai-logo-marquee-placeholder-{{ ai_gen_id }} {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    height: {{ block.settings.logo_height }}px;
+  }
+
+  .ai-logo-marquee-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  @keyframes ai-logo-marquee-scroll-{{ ai_gen_id }} {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-100% - {{ block.settings.logo_spacing }}px));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ai-logo-marquee-group-{{ ai_gen_id }} {
+      animation: none;
+    }
+  }
+{% endstyle %}
+
+<logo-marquee-{{ ai_gen_id }}
+  class="ai-logo-marquee-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-logo-marquee-track-{{ ai_gen_id }}">
+    {% for j in (1..4) %}
+      <div class="ai-logo-marquee-group-{{ ai_gen_id }}" aria-hidden="{% if j > 1 %}true{% else %}false{% endif %}">
+        {% for i in (1..12) %}
+          {% liquid
+            assign logo_key = 'logo_' | append: i
+            assign logo = block.settings[logo_key]
+          %}
+          {% if logo != blank %}
+            <div class="ai-logo-marquee-item-{{ ai_gen_id }}">
+              <img
+                src="{{ logo | image_url: width: 400 }}"
+                alt="{{ logo.alt | escape }}"
+                loading="lazy"
+                width="{{ logo.width }}"
+                height="{{ logo.height }}"
+              >
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</logo-marquee-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class LogoMarquee{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-logo-marquee-track-{{ ai_gen_id }}');
+        this.setupAccessibility();
+      }
+
+      setupAccessibility() {
+        if (this.track) {
+          this.track.setAttribute('role', 'marquee');
+          this.track.setAttribute('aria-live', 'off');
+        }
+      }
+    }
+
+    customElements.define('logo-marquee-{{ ai_gen_id }}', LogoMarquee{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Logo marquee",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FF1493"
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_color_filter",
+      "label": "Convert logos to white",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "logo_spacing",
+      "label": "Logo spacing",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Vertical padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Logos"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_1",
+      "label": "Logo 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_2",
+      "label": "Logo 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_3",
+      "label": "Logo 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_4",
+      "label": "Logo 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_5",
+      "label": "Logo 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_6",
+      "label": "Logo 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_7",
+      "label": "Logo 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_8",
+      "label": "Logo 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_9",
+      "label": "Logo 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_10",
+      "label": "Logo 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_11",
+      "label": "Logo 11"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_12",
+      "label": "Logo 12"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo marquee"
+    }
+  ]
+}
+{% endschema %}

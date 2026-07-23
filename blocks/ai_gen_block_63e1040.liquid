@@ -1,0 +1,318 @@
+{% doc %}
+  @prompt
+    generate me a logo carosel with each logo being the same size and being black. make it so I can adjust logo size, scroll speed and direction, and padding on top and bottom of section
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-logo-carousel-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-logo-carousel-track-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.logo_spacing }}px;
+    width: max-content;
+  }
+
+  .ai-logo-carousel-item-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.logo_size }}px;
+    height: {{ block.settings.logo_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-logo-carousel-item-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0);
+  }
+
+  .ai-logo-carousel-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-logo-carousel-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-logo-carousel-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 14px;
+  }
+{% endstyle %}
+
+<logo-carousel-{{ ai_gen_id }}
+  class="ai-logo-carousel-{{ ai_gen_id }}"
+  data-speed="{{ block.settings.scroll_speed }}"
+  data-direction="{{ block.settings.scroll_direction }}"
+  {{ block.shopify_attributes }}
+>
+  {% assign has_logos = false %}
+  {% for i in (1..10) %}
+    {% assign logo_key = 'logo_' | append: i %}
+    {% if block.settings[logo_key] != blank %}
+      {% assign has_logos = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_logos %}
+    <div class="ai-logo-carousel-track-{{ ai_gen_id }}">
+      {% for i in (1..10) %}
+        {% assign logo_key = 'logo_' | append: i %}
+        {% if block.settings[logo_key] != blank %}
+          <div class="ai-logo-carousel-item-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings[logo_key] | image_url: width: 400 }}"
+              alt="Logo {{ i }}"
+              loading="lazy"
+              width="{{ block.settings.logo_size }}"
+              height="{{ block.settings.logo_size }}"
+            >
+          </div>
+        {% endif %}
+      {% endfor %}
+      {% for i in (1..10) %}
+        {% assign logo_key = 'logo_' | append: i %}
+        {% if block.settings[logo_key] != blank %}
+          <div class="ai-logo-carousel-item-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings[logo_key] | image_url: width: 400 }}"
+              alt="Logo {{ i }}"
+              loading="lazy"
+              width="{{ block.settings.logo_size }}"
+              height="{{ block.settings.logo_size }}"
+            >
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="ai-logo-carousel-empty-state-{{ ai_gen_id }}">
+      Next, add logos to display in the carousel
+    </div>
+  {% endif %}
+</logo-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class LogoCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.track = null;
+        this.animationId = null;
+        this.position = 0;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-logo-carousel-track-{{ ai_gen_id }}');
+        
+        if (!this.track) return;
+
+        const speed = parseFloat(this.dataset.speed) || 1;
+        const direction = this.dataset.direction || 'left';
+        const pixelsPerSecond = speed * 50;
+        
+        let lastTime = performance.now();
+        
+        const animate = (currentTime) => {
+          const deltaTime = (currentTime - lastTime) / 1000;
+          lastTime = currentTime;
+          
+          const movement = pixelsPerSecond * deltaTime;
+          
+          if (direction === 'left') {
+            this.position -= movement;
+          } else {
+            this.position += movement;
+          }
+          
+          const trackWidth = this.track.scrollWidth / 2;
+          
+          if (direction === 'left' && this.position <= -trackWidth) {
+            this.position += trackWidth;
+          } else if (direction === 'right' && this.position >= trackWidth) {
+            this.position -= trackWidth;
+          }
+          
+          this.track.style.transform = `translateX(${this.position}px)`;
+          
+          this.animationId = requestAnimationFrame(animate);
+        };
+        
+        this.animationId = requestAnimationFrame(animate);
+      }
+
+      disconnectedCallback() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+        }
+      }
+    }
+
+    customElements.define('logo-carousel-{{ ai_gen_id }}', LogoCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Logo carousel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Logo settings"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Logo size",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "logo_spacing",
+      "label": "Logo spacing",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll speed",
+      "min": 0.5,
+      "max": 5,
+      "step": 0.5,
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "Scroll direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Logos"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_1",
+      "label": "Logo 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_2",
+      "label": "Logo 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_3",
+      "label": "Logo 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_4",
+      "label": "Logo 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_5",
+      "label": "Logo 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_6",
+      "label": "Logo 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_7",
+      "label": "Logo 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_8",
+      "label": "Logo 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_9",
+      "label": "Logo 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_10",
+      "label": "Logo 10"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo carousel"
+    }
+  ]
+}
+{% endschema %}

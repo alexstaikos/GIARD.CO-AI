@@ -1,0 +1,112 @@
+{{ 'lp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: 40px 24px;
+    text-align: center;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lp-logos__label {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0a0a0a;
+    margin-bottom: 24px;
+  }
+  #shopify-section-{{ section.id }} .lp-logos__track-wrap {
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lp-logos__track {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    animation: lp-marquee 22s linear infinite;
+    width: max-content;
+  }
+  #shopify-section-{{ section.id }} .lp-logos__track:hover {
+    animation-play-state: paused;
+  }
+  #shopify-section-{{ section.id }} .lp-logos__logo {
+    height: 32px;
+    object-fit: contain;
+    opacity: 0.7;
+    filter: grayscale(1);
+    flex-shrink: 0;
+  }
+  #shopify-section-{{ section.id }} .lp-logos__name {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #555;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  @keyframes lp-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+{% endstyle %}
+
+<div class="lp-logos">
+  {% if section.settings.label != blank %}
+    <p class="lp-logos__label">{{ section.settings.label }}</p>
+  {% endif %}
+  <div class="lp-logos__track-wrap">
+    <div class="lp-logos__track">
+      {% for i in (1..8) %}
+        {% assign img_key = 'logo' | append: i | append: '_img' %}
+        {% assign name_key = 'logo' | append: i | append: '_name' %}
+        {% if section.settings[img_key] %}
+          <img src="{{ section.settings[img_key] | image_url: width: 200 }}" alt="{{ section.settings[name_key] }}" class="lp-logos__logo">
+        {% elsif section.settings[name_key] != blank %}
+          <span class="lp-logos__name">{{ section.settings[name_key] }}</span>
+        {% endif %}
+      {% endfor %}
+      {% for i in (1..8) %}
+        {% assign img_key = 'logo' | append: i | append: '_img' %}
+        {% assign name_key = 'logo' | append: i | append: '_name' %}
+        {% if section.settings[img_key] %}
+          <img src="{{ section.settings[img_key] | image_url: width: 200 }}" alt="{{ section.settings[name_key] }}" class="lp-logos__logo">
+        {% elsif section.settings[name_key] != blank %}
+          <span class="lp-logos__name">{{ section.settings[name_key] }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LP Logo Bar",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "text", "id": "label", "label": "Label text", "default": "Let's be honest, these guys aren't doing too bad:"},
+    {"type": "header", "content": "Logo 1"},
+    {"type": "image_picker", "id": "logo1_img", "label": "Logo image"},
+    {"type": "text", "id": "logo1_name", "label": "Fallback name", "default": "Kanga"},
+    {"type": "header", "content": "Logo 2"},
+    {"type": "image_picker", "id": "logo2_img", "label": "Logo image"},
+    {"type": "text", "id": "logo2_name", "label": "Fallback name", "default": "Huk"},
+    {"type": "header", "content": "Logo 3"},
+    {"type": "image_picker", "id": "logo3_img", "label": "Logo image"},
+    {"type": "text", "id": "logo3_name", "label": "Fallback name", "default": "HelloFresh"},
+    {"type": "header", "content": "Logo 4"},
+    {"type": "image_picker", "id": "logo4_img", "label": "Logo image"},
+    {"type": "text", "id": "logo4_name", "label": "Fallback name", "default": "Mom Water"},
+    {"type": "header", "content": "Logo 5"},
+    {"type": "image_picker", "id": "logo5_img", "label": "Logo image"},
+    {"type": "text", "id": "logo5_name", "label": "Fallback name", "default": "The Ritz-Carlton"},
+    {"type": "header", "content": "Logo 6"},
+    {"type": "image_picker", "id": "logo6_img", "label": "Logo image"},
+    {"type": "text", "id": "logo6_name", "label": "Fallback name", "default": "Peter Millar"},
+    {"type": "header", "content": "Logo 7"},
+    {"type": "image_picker", "id": "logo7_img", "label": "Logo image"},
+    {"type": "text", "id": "logo7_name", "label": "Fallback name", "default": "Promix"},
+    {"type": "header", "content": "Logo 8"},
+    {"type": "image_picker", "id": "logo8_img", "label": "Logo image"},
+    {"type": "text", "id": "logo8_name", "label": "Fallback name", "default": "NordicWave"}
+  ],
+  "presets": [{"name": "LP Logo Bar"}]
+}
+{% endschema %}

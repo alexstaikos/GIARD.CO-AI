@@ -1,0 +1,96 @@
+{% style %}
+  #shopify-section-{{ section.id }} { background: {{ section.settings.bg_color }}; padding: var(--lp-section-padding, 80px) 24px 32px; text-align: center; }
+  #shopify-section-{{ section.id }} .lp-faq__eyebrow { color: {{ section.settings.eyebrow_color }}; font-size: {{ section.settings.eyebrow_size }}px; text-transform: none; letter-spacing: 0.02em; margin-bottom: 12px; display: block; }
+  #shopify-section-{{ section.id }} .lp-faq__headline { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: clamp(24px, 4vw, {{ section.settings.heading_size }}px); font-weight: 400; color: {{ section.settings.heading_color }}; max-width: 700px; margin: 0 auto 48px; line-height: 1.0; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-faq__list { max-width: 800px; margin: 0 auto; text-align: left; }
+  #shopify-section-{{ section.id }} .lp-faq__item { border-bottom: 1px solid #e5e0d4; }
+  #shopify-section-{{ section.id }} .lp-faq__question { width: 100%; background: none; border: none; padding: 24px 0; text-align: left; font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: {{ section.settings.subheading_size }}px; font-weight: 400; color: {{ section.settings.subheading_color }}; cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-faq__question::after { content: '+'; font-size: 22px; color: #65222d; flex-shrink: 0; margin-left: 16px; }
+  #shopify-section-{{ section.id }} .lp-faq__item.is-open .lp-faq__question::after { content: '\2212'; }
+  #shopify-section-{{ section.id }} .lp-faq__answer { display: none; padding: 0 0 24px; font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: {{ section.settings.body_size }}px; color: {{ section.settings.body_color }}; line-height: 1.7; }
+  #shopify-section-{{ section.id }} .lp-faq__item.is-open .lp-faq__answer { display: block; }
+  #shopify-section-{{ section.id }} .lp-faq__cta-wrap { text-align: center; margin-top: 48px; }
+  #shopify-section-{{ section.id }} .lp-btn {
+    background: {{ section.settings.btn_bg_color }} !important;
+    color: {{ section.settings.btn_text_color }} !important;
+    font-size: {{ section.settings.btn_text_size }}px !important;
+    border-radius: {{ section.settings.btn_radius }}px !important;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-family: var(--lp-font-body, 'Inter', sans-serif) !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s !important;
+  }
+  #shopify-section-{{ section.id }} .lp-btn:hover { opacity: 0.88 !important; }
+{% endstyle %}
+<div class="lp-faq">
+  {% if section.settings.eyebrow != blank %}<span class="lp-faq__eyebrow">{{ section.settings.eyebrow }}</span>{% endif %}
+  <h2 class="lp-faq__headline">{{ section.settings.headline }}</h2>
+  <div class="lp-faq__list">
+    {% for i in (1..8) %}
+      {% assign q_key = 'q' | append: i | append: '_question' %}
+      {% assign a_key = 'q' | append: i | append: '_answer' %}
+      {% if section.settings[q_key] != blank %}
+        <div class="lp-faq__item">
+          <button class="lp-faq__question" type="button">{{ section.settings[q_key] }}</button>
+          <div class="lp-faq__answer">{{ section.settings[a_key] }}</div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% if section.settings.cta_text != blank %}
+    <div class="lp-faq__cta-wrap">
+      <a href="{{ section.settings.cta_url }}" class="lp-btn">{{ section.settings.cta_text }}</a>
+    </div>
+  {% endif %}
+</div>
+<script>
+  document.querySelectorAll('#shopify-section-{{ section.id }} .lp-faq__question').forEach(function(btn){
+    btn.addEventListener('click', function(){ this.closest('.lp-faq__item').classList.toggle('is-open'); });
+  });
+</script>
+{% schema %}
+{
+  "name": "LP FAQ",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Common questions"},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Frequently Asked Questions"},
+    {"type": "header", "content": "Q1"}, {"type": "text", "id": "q1_question", "label": "Question", "default": "What makes Giard & Co different from other marketing agencies?"}, {"type": "textarea", "id": "q1_answer", "label": "Answer"},
+    {"type": "header", "content": "Q2"}, {"type": "text", "id": "q2_question", "label": "Question", "default": "How quickly can I expect to see results?"}, {"type": "textarea", "id": "q2_answer", "label": "Answer"},
+    {"type": "header", "content": "Q3"}, {"type": "text", "id": "q3_question", "label": "Question", "default": "What is your approach to pricing and investment?"}, {"type": "textarea", "id": "q3_answer", "label": "Answer"},
+    {"type": "header", "content": "Q4"}, {"type": "text", "id": "q4_question", "label": "Question", "default": "How do you measure success for lifestyle brands?"}, {"type": "textarea", "id": "q4_answer", "label": "Answer"},
+    {"type": "header", "content": "Q5"}, {"type": "text", "id": "q5_question", "label": "Question", "default": "Do you work with lifestyle brands of all sizes?"}, {"type": "textarea", "id": "q5_answer", "label": "Answer"},
+    {"type": "header", "content": "Q6"}, {"type": "text", "id": "q6_question", "label": "Question"}, {"type": "textarea", "id": "q6_answer", "label": "Answer"},
+    {"type": "header", "content": "Q7"}, {"type": "text", "id": "q7_question", "label": "Question"}, {"type": "textarea", "id": "q7_answer", "label": "Answer"},
+    {"type": "header", "content": "Q8"}, {"type": "text", "id": "q8_question", "label": "Question"}, {"type": "textarea", "id": "q8_answer", "label": "Answer"},
+    {"type": "header", "content": "End of section CTA"},
+    {"type": "text", "id": "cta_text", "label": "Button text", "default": "Set up your media operating system"},
+    {"type": "url", "id": "cta_url", "label": "Button URL"},
+    {"type": "header", "content": "Eyebrow Style"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#d18285"},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size (px)", "min": 10, "max": 24, "step": 1, "default": 13},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 56},
+    {"type": "header", "content": "Question Style"},
+    {"type": "color", "id": "subheading_color", "label": "Question color", "default": "#0a0a0a"},
+    {"type": "range", "id": "subheading_size", "label": "Question size (px)", "min": 14, "max": 32, "step": 1, "default": 20},
+    {"type": "header", "content": "Answer Style"},
+    {"type": "color", "id": "body_color", "label": "Answer color", "default": "#555555"},
+    {"type": "range", "id": "body_size", "label": "Answer size (px)", "min": 12, "max": 28, "step": 1, "default": 16},
+    {"type": "header", "content": "Button Style"},
+    {"type": "color", "id": "btn_bg_color", "label": "Button background", "default": "#d18285"},
+    {"type": "color", "id": "btn_text_color", "label": "Button text color", "default": "#ffffff"},
+    {"type": "range", "id": "btn_text_size", "label": "Button text size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "range", "id": "btn_radius", "label": "Corner radius (px)", "min": 0, "max": 40, "step": 1, "default": 10},
+    {"type": "range", "id": "btn_padding_v", "label": "Vertical padding (px)", "min": 8, "max": 40, "step": 2, "default": 16},
+    {"type": "range", "id": "btn_padding_h", "label": "Horizontal padding (px)", "min": 16, "max": 80, "step": 4, "default": 40}
+  ],
+  "presets": [{"name": "LP FAQ"}]
+}
+{% endschema %}

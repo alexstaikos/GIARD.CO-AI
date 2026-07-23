@@ -1,0 +1,55 @@
+{% style %}
+  #shopify-section-{{ section.id }} { background: {{ section.settings.bg_color }}; padding: var(--lp-section-padding, 80px) 24px 32px; text-align: center; overflow-x: hidden; }
+  #shopify-section-{{ section.id }} .lp-finalcta__headline { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: clamp(28px, 5vw, {{ section.settings.heading_size }}px); font-weight: 400; color: {{ section.settings.heading_color }}; line-height: 1.0; max-width: 700px; margin: 0 auto 20px; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-finalcta__subhead { font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: 18px; font-weight: 600; color: {{ section.settings.heading_color }}; max-width: 620px; margin: 0 auto 20px; line-height: 1.5; }
+  #shopify-section-{{ section.id }} .lp-finalcta__body { font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: {{ section.settings.body_size }}px; color: {{ section.settings.body_color }}; max-width: 580px; margin: 0 auto 36px; line-height: 1.7; }
+  #shopify-section-{{ section.id }} .lp-btn {
+    background: {{ section.settings.btn_bg_color }} !important;
+    color: {{ section.settings.btn_text_color }} !important;
+    font-size: {{ section.settings.btn_text_size }}px !important;
+    border-radius: {{ section.settings.btn_radius }}px !important;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-family: var(--lp-font-body, 'Inter', sans-serif) !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s !important;
+  }
+  #shopify-section-{{ section.id }} .lp-btn:hover { opacity: 0.88 !important; }
+{% endstyle %}
+<div class="lp-finalcta">
+  <h2 class="lp-finalcta__headline">{{ section.settings.headline | default: 'Ready to Join Our Portfolio?' }}</h2>
+  {% if section.settings.subhead != blank %}<p class="lp-finalcta__subhead">{{ section.settings.subhead }}</p>{% endif %}
+  {% if section.settings.body != blank %}<p class="lp-finalcta__body">{{ section.settings.body }}</p>{% endif %}
+  <a href="{{ section.settings.cta_url }}" class="lp-btn">{{ section.settings.cta_text | default: 'Book your strategy call now' }}</a>
+</div>
+{% schema %}
+{
+  "name": "LP Final CTA",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#f9f6ef"},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Ready to Join Our Portfolio?"},
+    {"type": "text", "id": "subhead", "label": "Subhead (results stat)", "default": "The last brand we did this for 5x'd media output, cut CAC in half, and grew ecomm sales 30% in two quarters."},
+    {"type": "textarea", "id": "body", "label": "Body", "default": "We work with a limited roster because every brand is integrated with our own portfolio. If you're ready to ditch the agency route and bring on a team that feels like a partner, Let's talk."},
+    {"type": "text", "id": "cta_text", "label": "Button text", "default": "Build your media operating system"},
+    {"type": "url", "id": "cta_url", "label": "Button URL"},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 64},
+    {"type": "header", "content": "Body Style"},
+    {"type": "color", "id": "body_color", "label": "Body color", "default": "#555555"},
+    {"type": "range", "id": "body_size", "label": "Body size (px)", "min": 12, "max": 28, "step": 1, "default": 16},
+    {"type": "header", "content": "Button Style"},
+    {"type": "color", "id": "btn_bg_color", "label": "Button background", "default": "#65222d"},
+    {"type": "color", "id": "btn_text_color", "label": "Button text color", "default": "#ffffff"},
+    {"type": "range", "id": "btn_text_size", "label": "Button text size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "range", "id": "btn_radius", "label": "Corner radius (px)", "min": 0, "max": 40, "step": 1, "default": 10},
+    {"type": "range", "id": "btn_padding_v", "label": "Vertical padding (px)", "min": 8, "max": 40, "step": 2, "default": 16},
+    {"type": "range", "id": "btn_padding_h", "label": "Horizontal padding (px)", "min": 16, "max": 80, "step": 4, "default": 40}
+  ],
+  "presets": [{"name": "LP Final CTA"}]
+}
+{% endschema %}

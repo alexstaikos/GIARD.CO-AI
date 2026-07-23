@@ -1,0 +1,67 @@
+{% style %}
+  #shopify-section-{{ section.id }} { background: {{ section.settings.bg_color }}; padding: var(--lp-section-padding, 80px) 24px 32px; text-align: center; overflow-x: hidden; }
+  #shopify-section-{{ section.id }} .lp-ctamid__avatars { display: flex; justify-content: center; margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .lp-ctamid__avatar { width: 52px; height: 52px; border-radius: 50%; border: 3px solid #fff; margin: 0 -6px; object-fit: cover; background: #e0d4ae; display: block; }
+  #shopify-section-{{ section.id }} .lp-ctamid__eyebrow { color: {{ section.settings.eyebrow_color }}; font-size: {{ section.settings.eyebrow_size }}px; text-transform: none; letter-spacing: 0.02em; margin-bottom: 16px; display: block; }
+  #shopify-section-{{ section.id }} .lp-ctamid__headline { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: clamp(24px, 4vw, {{ section.settings.heading_size }}px); font-weight: 400; color: {{ section.settings.heading_color }}; line-height: 1.0; max-width: 800px; margin: 0 auto 16px; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-ctamid__body { font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: {{ section.settings.body_size }}px; color: {{ section.settings.body_color }}; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
+  #shopify-section-{{ section.id }} .lp-btn {
+    background: {{ section.settings.btn_bg_color }} !important;
+    color: {{ section.settings.btn_text_color }} !important;
+    font-size: {{ section.settings.btn_text_size }}px !important;
+    border-radius: {{ section.settings.btn_radius }}px !important;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-family: var(--lp-font-body, 'Inter', sans-serif) !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s !important;
+  }
+  #shopify-section-{{ section.id }} .lp-btn:hover { opacity: 0.88 !important; }
+{% endstyle %}
+<div class="lp-ctamid">
+  <div class="lp-ctamid__avatars">
+    {% if section.settings.avatar1 %}<img src="{{ section.settings.avatar1 | image_url: width: 120 }}" alt="" class="lp-ctamid__avatar">{% else %}<div class="lp-ctamid__avatar"></div>{% endif %}
+    {% if section.settings.avatar2 %}<img src="{{ section.settings.avatar2 | image_url: width: 120 }}" alt="" class="lp-ctamid__avatar">{% else %}<div class="lp-ctamid__avatar"></div>{% endif %}
+  </div>
+  {% if section.settings.eyebrow != blank %}<span class="lp-ctamid__eyebrow">{{ section.settings.eyebrow }}</span>{% endif %}
+  <h2 class="lp-ctamid__headline">{{ section.settings.headline }}</h2>
+  {% if section.settings.body != blank %}<p class="lp-ctamid__body">{{ section.settings.body }}</p>{% endif %}
+  <a href="{{ section.settings.cta_url }}" class="lp-btn">{{ section.settings.cta_text }}</a>
+</div>
+{% schema %}
+{
+  "name": "LP CTA Mid",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "header", "content": "Avatars"},
+    {"type": "image_picker", "id": "avatar1", "label": "Avatar 1"},
+    {"type": "image_picker", "id": "avatar2", "label": "Avatar 2"},
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Your chance to speak with the team who made this landing page and will do your marketing"},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Unlock your brand's premium pricing potential"},
+    {"type": "textarea", "id": "body", "label": "Body text", "default": "By booking a strategy call with our team. We'll dissect your Shopify setup, tear apart your ad library to expose what's broken, and hand you our Lifestyle Ad Script Builder."},
+    {"type": "text", "id": "cta_text", "label": "Button text", "default": "Book your strategy call now"},
+    {"type": "url", "id": "cta_url", "label": "Button URL"},
+    {"type": "header", "content": "Eyebrow Style"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#d18285"},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size (px)", "min": 10, "max": 24, "step": 1, "default": 13},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 56},
+    {"type": "header", "content": "Body Style"},
+    {"type": "color", "id": "body_color", "label": "Body color", "default": "#555555"},
+    {"type": "range", "id": "body_size", "label": "Body size (px)", "min": 12, "max": 28, "step": 1, "default": 16},
+    {"type": "header", "content": "Button Style"},
+    {"type": "color", "id": "btn_bg_color", "label": "Button background", "default": "#65222d"},
+    {"type": "color", "id": "btn_text_color", "label": "Button text color", "default": "#ffffff"},
+    {"type": "range", "id": "btn_text_size", "label": "Button text size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "range", "id": "btn_radius", "label": "Corner radius (px)", "min": 0, "max": 40, "step": 1, "default": 10},
+    {"type": "range", "id": "btn_padding_v", "label": "Vertical padding (px)", "min": 8, "max": 40, "step": 2, "default": 16},
+    {"type": "range", "id": "btn_padding_h", "label": "Horizontal padding (px)", "min": 16, "max": 80, "step": 4, "default": 40}
+  ],
+  "presets": [{"name": "LP CTA Mid"}]
+}
+{% endschema %}

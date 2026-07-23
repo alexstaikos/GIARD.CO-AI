@@ -1,0 +1,39 @@
+{{ 'lp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: #d18285;
+    padding: 0 24px;
+  }
+  #shopify-section-{{ section.id }} .lp-nav__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+  }
+  #shopify-section-{{ section.id }} .lp-nav__logo {
+    font-family: 'Aro-Wide', Georgia, serif;
+    font-size: 26px;
+    color: #0a0a0a;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+{% endstyle %}
+
+<div class="lp-nav">
+  <div class="lp-nav__inner">
+    <a href="/" class="lp-nav__logo">{{ section.settings.logo_text | default: 'GIARD&CO' }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LP Nav",
+  "settings": [
+    {"type": "text", "id": "logo_text", "label": "Logo text", "default": "GIARD&CO"}
+  ],
+  "presets": [{"name": "LP Nav"}]
+}
+{% endschema %}

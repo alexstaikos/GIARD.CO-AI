@@ -1,0 +1,122 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: var(--lp-section-padding, 80px) 24px calc(var(--lp-section-padding, 80px) * 0.4);
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lp-hero__eyebrow {
+    color: {{ section.settings.eyebrow_color }};
+    font-size: {{ section.settings.eyebrow_size }}px;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lp-hero__headline {
+    font-family: var(--lp-font-heading, 'Anton', Georgia, serif);
+    font-size: clamp(28px, 6vw, {{ section.settings.heading_size }}px);
+    font-weight: 400;
+    color: {{ section.settings.heading_color }};
+    line-height: 1.0;
+    max-width: 900px;
+    margin: 0 auto 32px;
+    text-transform: none;
+  }
+  #shopify-section-{{ section.id }} .lp-hero__ctas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  #shopify-section-{{ section.id }} .lp-btn {
+    background: {{ section.settings.btn_bg_color }} !important;
+    color: {{ section.settings.btn_text_color }} !important;
+    font-size: {{ section.settings.btn_text_size }}px !important;
+    border-radius: {{ section.settings.btn_radius }}px !important;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-family: var(--lp-font-body, 'Inter', sans-serif) !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s !important;
+  }
+  #shopify-section-{{ section.id }} .lp-btn:hover { opacity: 0.88 !important; }
+  #shopify-section-{{ section.id }} .lp-hero__secondary {
+    font-family: var(--lp-font-body, 'Inter', sans-serif);
+    font-size: 15px;
+    color: {{ section.settings.heading_color }};
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    display: inline-block;
+  }
+  #shopify-section-{{ section.id }} .lp-hero__video {
+    max-width: 800px;
+    margin: 0 auto 32px;
+    border-radius: var(--lp-btn-radius, 10px);
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  }
+  #shopify-section-{{ section.id }} .lp-hero__video wistia-player {
+    display: block;
+    width: 100%;
+  }
+{% endstyle %}
+
+<script src="https://fast.wistia.com/player.js" async></script>
+<script src="https://fast.wistia.com/embed/4fhwt6hm67.js" async type="module"></script>
+<style>wistia-player[media-id='4fhwt6hm67']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/4fhwt6hm67/swatch');display:block;filter:blur(5px);padding-top:56.25%;}</style>
+
+<div class="lp-hero">
+  {% if section.settings.eyebrow != blank %}
+    <span class="lp-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+  {% endif %}
+  <h1 class="lp-hero__headline">{{ section.settings.headline | default: 'Your ads and your site are fighting each other. We fix that.' }}</h1>
+  <div class="lp-hero__video">
+    <wistia-player media-id="4fhwt6hm67" aspect="1.7777777777777777"></wistia-player>
+  </div>
+  {% if section.settings.primary_cta_text != blank or section.settings.secondary_cta_text != blank %}
+    <div class="lp-hero__ctas">
+      {% if section.settings.primary_cta_text != blank %}
+        <a href="{{ section.settings.primary_cta_url }}" class="lp-btn">{{ section.settings.primary_cta_text }}</a>
+      {% endif %}
+      {% if section.settings.secondary_cta_text != blank %}
+        <a href="{{ section.settings.secondary_cta_anchor }}" class="lp-hero__secondary">{{ section.settings.secondary_cta_text }}</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "LP Hero",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "You can't effectively charge 20-30% more for your products when you're operating like a sellout."},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Your ads and your site are fighting each other. We fix that."},
+    {"type": "header", "content": "Primary CTA"},
+    {"type": "text", "id": "primary_cta_text", "label": "Button text", "default": "Set up your media operating system"},
+    {"type": "url", "id": "primary_cta_url", "label": "Button URL"},
+    {"type": "header", "content": "Secondary CTA (anchor link)"},
+    {"type": "text", "id": "secondary_cta_text", "label": "Link text", "default": "See how we work"},
+    {"type": "text", "id": "secondary_cta_anchor", "label": "Anchor target", "default": "#how-we-work", "info": "Use a section anchor like #how-we-work"},
+    {"type": "header", "content": "Eyebrow Style"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#d18285"},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size (px)", "min": 10, "max": 24, "step": 1, "default": 13},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 64},
+    {"type": "header", "content": "Button Style"},
+    {"type": "color", "id": "btn_bg_color", "label": "Button background", "default": "#d18285"},
+    {"type": "color", "id": "btn_text_color", "label": "Button text color", "default": "#ffffff"},
+    {"type": "range", "id": "btn_text_size", "label": "Button text size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "range", "id": "btn_radius", "label": "Corner radius (px)", "min": 0, "max": 40, "step": 1, "default": 10},
+    {"type": "range", "id": "btn_padding_v", "label": "Vertical padding (px)", "min": 8, "max": 40, "step": 2, "default": 16},
+    {"type": "range", "id": "btn_padding_h", "label": "Horizontal padding (px)", "min": 16, "max": 80, "step": 4, "default": 40}
+  ],
+  "presets": [{"name": "LP Hero"}]
+}
+{% endschema %}

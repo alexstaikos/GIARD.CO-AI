@@ -1,0 +1,36 @@
+{% style %}
+  #shopify-section-{{ section.id }} { background: {{ section.settings.bg_color }}; padding: var(--lp-section-padding, 80px) 24px; }
+  #shopify-section-{{ section.id }} .lp-about__inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  #shopify-section-{{ section.id }} .lp-about__eyebrow { color: {{ section.settings.eyebrow_color }}; font-size: {{ section.settings.eyebrow_size }}px; text-transform: none; letter-spacing: 0.02em; margin-bottom: 16px; display: block; }
+  #shopify-section-{{ section.id }} .lp-about__headline { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: clamp(24px, 4vw, {{ section.settings.heading_size }}px); font-weight: 400; color: {{ section.settings.heading_color }}; line-height: 1.0; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-about__image { width: 100%; border-radius: var(--lp-btn-radius, 10px); object-fit: cover; aspect-ratio: 4/3; }
+  #shopify-section-{{ section.id }} .lp-about__placeholder { width: 100%; border-radius: var(--lp-btn-radius, 10px); background: #e0d4ae; aspect-ratio: 4/3; }
+  @media(max-width: 768px) { #shopify-section-{{ section.id }} .lp-about__inner { grid-template-columns: 1fr; } }
+{% endstyle %}
+<div class="lp-about"><div class="lp-about__inner">
+  <div class="lp-about__text">
+    {% if section.settings.eyebrow != blank %}<span class="lp-about__eyebrow">{{ section.settings.eyebrow }}</span>{% endif %}
+    <h2 class="lp-about__headline">{{ section.settings.headline }}</h2>
+  </div>
+  <div class="lp-about__media">
+    {% if section.settings.image %}<img src="{{ section.settings.image | image_url: width: 800 }}" alt="" class="lp-about__image">{% else %}<div class="lp-about__placeholder"></div>{% endif %}
+  </div>
+</div></div>
+{% schema %}
+{
+  "name": "LP About Split",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About Giard & Co"},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Become part of the portfolio we're already building!"},
+    {"type": "image_picker", "id": "image", "label": "Image"},
+    {"type": "header", "content": "Eyebrow Style"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#d18285"},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size (px)", "min": 10, "max": 24, "step": 1, "default": 13},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 64}
+  ],
+  "presets": [{"name": "LP About Split"}]
+}
+{% endschema %}

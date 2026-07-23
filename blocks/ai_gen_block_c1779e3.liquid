@@ -1,0 +1,484 @@
+{% doc %}
+  @prompt
+    I want to make a media colouge section here with media blocked for each brand in rectangles. I want to be able to have cover images and titles for each brands and I want the vidoes to all have adjustable corner radiuses. right now we have 5 total brands so lay it out nice like that, I need to be able to upload videos directly, no urls. I also want the collage to be better, there is too much blank space, everything else looks great, right now the brand vidoes arent showing when I upload, I also only want vidoes to play on hover. I also want to be able to add more vidoes if we have more down the road, also add a six tile to the bottom so we dont have that super wide block. make it so we can also add images to each section and vidoes play on image hover, make the colouage cooler - I dont want square, some rectangles too , organize this better, I want two rows, no blank space, some squares, some long rectangles, Make this more organized, no blank space, everytime I take a video out or add one, I want it to look good, make the colloge look good for four vidoes for now, maybe two rectangles, two squares but staggered like tiles, can you change the collage to make all of the vidoes a more similar size, right now some over power others. I also want to be able to remove the titles if I want and add a centered logo I can upload if possible, can we make the videos taller right now they are too wide, right now there is a large gap under each video when I upload. I need you to remove this so every video fits nicely here
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-brand-collage-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-brand-collage__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.gap }}px;
+    width: 100%;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.corner_radius }}px;
+    background-color: {{ block.settings.placeholder_bg_color }};
+    aspect-ratio: 1 / 1.2;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(1) {
+    grid-column: span 2;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(2) {
+    grid-column: span 2;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(3) {
+    grid-column: span 2;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(4) {
+    grid-column: span 2;
+  }
+
+  .ai-brand-collage__cover-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .ai-brand-collage__video-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:hover .ai-brand-collage__video-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-brand-collage__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .ai-brand-collage__logo-{{ ai_gen_id }} {
+    max-width: {{ block.settings.logo_max_width }}%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .ai-brand-collage__title-{{ ai_gen_id }} {
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+  }
+
+  .ai-brand-collage__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-brand-collage__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(1),
+    .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(2),
+    .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(3),
+    .ai-brand-collage__item-{{ ai_gen_id }}:nth-child(4) {
+      grid-column: span 1;
+    }
+  }
+{% endstyle %}
+
+<brand-collage-{{ ai_gen_id }} class="ai-brand-collage-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-brand-collage__grid-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign video_key = 'brand_' | append: i | append: '_video'
+        assign cover_key = 'brand_' | append: i | append: '_cover'
+        assign title_key = 'brand_' | append: i | append: '_title'
+        assign logo_key = 'brand_' | append: i | append: '_logo'
+        assign show_title_key = 'brand_' | append: i | append: '_show_title'
+
+        assign video = block.settings[video_key]
+        assign cover = block.settings[cover_key]
+        assign title = block.settings[title_key]
+        assign logo = block.settings[logo_key]
+        assign show_title = block.settings[show_title_key]
+      %}
+
+      {% if video != blank or cover != blank %}
+        <div class="ai-brand-collage__item-{{ ai_gen_id }}" data-item="{{ i }}">
+          {% if cover != blank %}
+            <img
+              src="{{ cover | image_url: width: 800 }}"
+              alt="{{ title | escape }}"
+              class="ai-brand-collage__cover-{{ ai_gen_id }}"
+              loading="lazy"
+              width="800"
+              height="960"
+            >
+          {% endif %}
+
+          {% if video != blank %}
+            <video
+              class="ai-brand-collage__video-{{ ai_gen_id }}"
+              muted
+              loop
+              playsinline
+              preload="none"
+            >
+              <source src="{{ video }}" type="video/mp4">
+            </video>
+          {% endif %}
+
+          <div class="ai-brand-collage__overlay-{{ ai_gen_id }}">
+            {% if logo != blank %}
+              <img
+                src="{{ logo | image_url: width: 400 }}"
+                alt="{{ title | escape }}"
+                class="ai-brand-collage__logo-{{ ai_gen_id }}"
+                loading="lazy"
+              >
+            {% elsif show_title and title != blank %}
+              <h3 class="ai-brand-collage__title-{{ ai_gen_id }}">{{ title }}</h3>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</brand-collage-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BrandCollage{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('.ai-brand-collage__item-{{ ai_gen_id }}');
+        this.setupVideoHover();
+      }
+
+      setupVideoHover() {
+        this.items.forEach((item) => {
+          const video = item.querySelector('.ai-brand-collage__video-{{ ai_gen_id }}');
+          
+          if (video) {
+            item.addEventListener('mouseenter', () => {
+              video.play().catch(() => {});
+            });
+
+            item.addEventListener('mouseleave', () => {
+              video.pause();
+              video.currentTime = 0;
+            });
+          }
+        });
+      }
+    }
+
+    customElements.define('brand-collage-{{ ai_gen_id }}', BrandCollage{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Brand video collage",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between items",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Placeholder background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "label": "Logo max width",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Brand 1"
+    },
+    {
+      "type": "video",
+      "id": "brand_1_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_1_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_1_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_1_show_title",
+      "label": "Show title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_1_title",
+      "label": "Title",
+      "default": "Brand 1"
+    },
+    {
+      "type": "header",
+      "content": "Brand 2"
+    },
+    {
+      "type": "video",
+      "id": "brand_2_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_2_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_2_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_2_show_title",
+      "label": "Show title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_2_title",
+      "label": "Title",
+      "default": "Brand 2"
+    },
+    {
+      "type": "header",
+      "content": "Brand 3"
+    },
+    {
+      "type": "video",
+      "id": "brand_3_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_3_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_3_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_3_show_title",
+      "label": "Show title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_3_title",
+      "label": "Title",
+      "default": "Brand 3"
+    },
+    {
+      "type": "header",
+      "content": "Brand 4"
+    },
+    {
+      "type": "video",
+      "id": "brand_4_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_4_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_4_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_4_show_title",
+      "label": "Show title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_4_title",
+      "label": "Title",
+      "default": "Brand 4"
+    },
+    {
+      "type": "header",
+      "content": "Brand 5"
+    },
+    {
+      "type": "video",
+      "id": "brand_5_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_5_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_5_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_5_show_title",
+      "label": "Show title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_5_title",
+      "label": "Title",
+      "default": "Brand 5"
+    },
+    {
+      "type": "header",
+      "content": "Brand 6"
+    },
+    {
+      "type": "video",
+      "id": "brand_6_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_6_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_6_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_6_show_title",
+      "label": "Show title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_6_title",
+      "label": "Title",
+      "default": "Brand 6"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand video collage"
+    }
+  ]
+}
+{% endschema %}

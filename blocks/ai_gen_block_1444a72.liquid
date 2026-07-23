@@ -1,0 +1,526 @@
+{% doc %}
+  @prompt
+    make a section with 4 blocks that are rounded and next to each other that I can put text in and include a header. make sure I can change the font, header type, colors, corner radius for all, add headings within each block as well, make it so there is a glow around each box that I can change the color of and make them move when you hover over them
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-text-blocks-container-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: 40px 20px;
+  }
+
+  .ai-text-blocks-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.header_alignment }};
+    margin-bottom: 30px;
+    color: {{ block.settings.header_color }};
+    font-family: {{ block.settings.header_font.family }}, {{ block.settings.header_font.fallback_families }};
+    font-weight: {{ block.settings.header_font.weight }};
+    font-style: {{ block.settings.header_font.style }};
+  }
+
+  .ai-text-blocks-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.block_spacing }}px;
+  }
+
+  .ai-text-block-{{ ai_gen_id }} {
+    background-color: {{ block.settings.block_background_color }};
+    border-radius: {{ block.settings.corner_radius }}px;
+    padding: {{ block.settings.block_padding }}px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    box-shadow: 0 0 {{ block.settings.glow_size }}px {{ block.settings.glow_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-text-block-{{ ai_gen_id }}:hover {
+    transform: translateY(-{{ block.settings.hover_lift }}px);
+    box-shadow: 0 {{ block.settings.hover_lift }}px {{ block.settings.glow_size | plus: 10 }}px {{ block.settings.glow_color }};
+  }
+
+  .ai-text-block-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.block_heading_color }};
+    font-family: {{ block.settings.block_heading_font.family }}, {{ block.settings.block_heading_font.fallback_families }};
+    font-weight: {{ block.settings.block_heading_font.weight }};
+    font-style: {{ block.settings.block_heading_font.style }};
+    font-size: {{ block.settings.block_heading_size }}px;
+    margin: 0 0 {{ block.settings.heading_spacing }}px 0;
+  }
+
+  .ai-text-block-content-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-family: {{ block.settings.text_font.family }}, {{ block.settings.text_font.fallback_families }};
+    font-weight: {{ block.settings.text_font.weight }};
+    font-style: {{ block.settings.text_font.style }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-text-blocks-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-text-blocks-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<text-blocks-{{ ai_gen_id }}
+  class="ai-text-blocks-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.header != blank %}
+    {% if block.settings.header_type == 'h1' %}
+      <h1 class="ai-text-blocks-header-{{ ai_gen_id }}">{{ block.settings.header }}</h1>
+    {% elsif block.settings.header_type == 'h2' %}
+      <h2 class="ai-text-blocks-header-{{ ai_gen_id }}">{{ block.settings.header }}</h2>
+    {% elsif block.settings.header_type == 'h3' %}
+      <h3 class="ai-text-blocks-header-{{ ai_gen_id }}">{{ block.settings.header }}</h3>
+    {% elsif block.settings.header_type == 'h4' %}
+      <h4 class="ai-text-blocks-header-{{ ai_gen_id }}">{{ block.settings.header }}</h4>
+    {% elsif block.settings.header_type == 'h5' %}
+      <h5 class="ai-text-blocks-header-{{ ai_gen_id }}">{{ block.settings.header }}</h5>
+    {% else %}
+      <h6 class="ai-text-blocks-header-{{ ai_gen_id }}">{{ block.settings.header }}</h6>
+    {% endif %}
+  {% endif %}
+
+  <div class="ai-text-blocks-grid-{{ ai_gen_id }}">
+    <div class="ai-text-block-{{ ai_gen_id }}">
+      {% if block.settings.block_1_heading != blank %}
+        {% if block.settings.block_heading_type == 'h1' %}
+          <h1 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_1_heading }}</h1>
+        {% elsif block.settings.block_heading_type == 'h2' %}
+          <h2 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_1_heading }}</h2>
+        {% elsif block.settings.block_heading_type == 'h3' %}
+          <h3 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_1_heading }}</h3>
+        {% elsif block.settings.block_heading_type == 'h4' %}
+          <h4 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_1_heading }}</h4>
+        {% elsif block.settings.block_heading_type == 'h5' %}
+          <h5 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_1_heading }}</h5>
+        {% else %}
+          <h6 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_1_heading }}</h6>
+        {% endif %}
+      {% endif %}
+      <div class="ai-text-block-content-{{ ai_gen_id }}">
+        {{ block.settings.block_1_text }}
+      </div>
+    </div>
+
+    <div class="ai-text-block-{{ ai_gen_id }}">
+      {% if block.settings.block_2_heading != blank %}
+        {% if block.settings.block_heading_type == 'h1' %}
+          <h1 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_2_heading }}</h1>
+        {% elsif block.settings.block_heading_type == 'h2' %}
+          <h2 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_2_heading }}</h2>
+        {% elsif block.settings.block_heading_type == 'h3' %}
+          <h3 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_2_heading }}</h3>
+        {% elsif block.settings.block_heading_type == 'h4' %}
+          <h4 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_2_heading }}</h4>
+        {% elsif block.settings.block_heading_type == 'h5' %}
+          <h5 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_2_heading }}</h5>
+        {% else %}
+          <h6 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_2_heading }}</h6>
+        {% endif %}
+      {% endif %}
+      <div class="ai-text-block-content-{{ ai_gen_id }}">
+        {{ block.settings.block_2_text }}
+      </div>
+    </div>
+
+    <div class="ai-text-block-{{ ai_gen_id }}">
+      {% if block.settings.block_3_heading != blank %}
+        {% if block.settings.block_heading_type == 'h1' %}
+          <h1 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_3_heading }}</h1>
+        {% elsif block.settings.block_heading_type == 'h2' %}
+          <h2 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_3_heading }}</h2>
+        {% elsif block.settings.block_heading_type == 'h3' %}
+          <h3 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_3_heading }}</h3>
+        {% elsif block.settings.block_heading_type == 'h4' %}
+          <h4 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_3_heading }}</h4>
+        {% elsif block.settings.block_heading_type == 'h5' %}
+          <h5 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_3_heading }}</h5>
+        {% else %}
+          <h6 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_3_heading }}</h6>
+        {% endif %}
+      {% endif %}
+      <div class="ai-text-block-content-{{ ai_gen_id }}">
+        {{ block.settings.block_3_text }}
+      </div>
+    </div>
+
+    <div class="ai-text-block-{{ ai_gen_id }}">
+      {% if block.settings.block_4_heading != blank %}
+        {% if block.settings.block_heading_type == 'h1' %}
+          <h1 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_4_heading }}</h1>
+        {% elsif block.settings.block_heading_type == 'h2' %}
+          <h2 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_4_heading }}</h2>
+        {% elsif block.settings.block_heading_type == 'h3' %}
+          <h3 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_4_heading }}</h3>
+        {% elsif block.settings.block_heading_type == 'h4' %}
+          <h4 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_4_heading }}</h4>
+        {% elsif block.settings.block_heading_type == 'h5' %}
+          <h5 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_4_heading }}</h5>
+        {% else %}
+          <h6 class="ai-text-block-heading-{{ ai_gen_id }}">{{ block.settings.block_4_heading }}</h6>
+        {% endif %}
+      {% endif %}
+      <div class="ai-text-block-content-{{ ai_gen_id }}">
+        {{ block.settings.block_4_text }}
+      </div>
+    </div>
+  </div>
+</text-blocks-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Four text blocks",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "header",
+      "label": "Header text",
+      "default": "Our Features"
+    },
+    {
+      "type": "select",
+      "id": "header_type",
+      "label": "Header type",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "font_picker",
+      "id": "header_font",
+      "label": "Font",
+      "default": "instrument_serif_n4"
+    },
+    {
+      "type": "color",
+      "id": "header_color",
+      "label": "Color",
+      "default": "#65222d"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Block 1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "block_1_heading",
+      "label": "Heading",
+      "default": "Feature 1"
+    },
+    {
+      "type": "richtext",
+      "id": "block_1_text",
+      "label": "Text",
+      "default": "<p>Add your text here</p>"
+    },
+    {
+      "type": "header",
+      "content": "Block 2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "block_2_heading",
+      "label": "Heading",
+      "default": "Feature 2"
+    },
+    {
+      "type": "richtext",
+      "id": "block_2_text",
+      "label": "Text",
+      "default": "<p>Add your text here</p>"
+    },
+    {
+      "type": "header",
+      "content": "Block 3"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "block_3_heading",
+      "label": "Heading",
+      "default": "Feature 3"
+    },
+    {
+      "type": "richtext",
+      "id": "block_3_text",
+      "label": "Text",
+      "default": "<p>Add your text here</p>"
+    },
+    {
+      "type": "header",
+      "content": "Block 4"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "block_4_heading",
+      "label": "Heading",
+      "default": "Feature 4"
+    },
+    {
+      "type": "richtext",
+      "id": "block_4_text",
+      "label": "Text",
+      "default": "<p>Add your text here</p>"
+    },
+    {
+      "type": "header",
+      "content": "Block heading style"
+    },
+    {
+      "type": "select",
+      "id": "block_heading_type",
+      "label": "Heading type",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h4"
+    },
+    {
+      "type": "font_picker",
+      "id": "block_heading_font",
+      "label": "Font",
+      "default": "instrument_serif_n4"
+    },
+    {
+      "type": "range",
+      "id": "block_heading_size",
+      "label": "Size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "block_heading_color",
+      "label": "Color",
+      "default": "#65222d"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Space below heading",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Block text style"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Font",
+      "default": "instrument_sans_n4"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color",
+      "default": "#65222d"
+    },
+    {
+      "type": "header",
+      "content": "Block style"
+    },
+    {
+      "type": "color",
+      "id": "block_background_color",
+      "label": "Background color",
+      "default": "#e0d4ae"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "block_padding",
+      "label": "Padding",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "block_spacing",
+      "label": "Space between blocks",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#9b4515"
+    },
+    {
+      "type": "header",
+      "content": "Glow and hover effects"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#9b4515"
+    },
+    {
+      "type": "range",
+      "id": "glow_size",
+      "label": "Glow size",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "hover_lift",
+      "label": "Hover lift distance",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Four text blocks"
+    }
+  ]
+}
+{% endschema %}

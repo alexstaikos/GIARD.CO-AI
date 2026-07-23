@@ -1,0 +1,138 @@
+{% style %}
+  #shopify-section-{{ section.id }} { background: {{ section.settings.bg_color }}; padding: var(--lp-section-padding, 80px) 20px 32px; text-align: center; }
+  #shopify-section-{{ section.id }} .lp-testimonials__eyebrow { color: {{ section.settings.eyebrow_color }}; font-size: {{ section.settings.eyebrow_size }}px; text-transform: none; font-variant: normal; letter-spacing: 0.02em; margin-bottom: 12px; display: block; }
+  #shopify-section-{{ section.id }} .lp-testimonials__headline { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: clamp(24px, 4vw, {{ section.settings.heading_size }}px); font-weight: 400; color: {{ section.settings.heading_color }}; max-width: 700px; margin: 0 auto 60px; line-height: 1.05; text-transform: none; font-variant: normal; }
+  #shopify-section-{{ section.id }} .lp-testimonials__row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 32px; max-width: 1100px; margin: 0 auto 40px; align-items: center; }
+  #shopify-section-{{ section.id }} .lp-testimonials__card { background: #fff; border-radius: var(--lp-btn-radius, 10px); padding: 32px 24px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); text-align: center; }
+  #shopify-section-{{ section.id }} .lp-testimonials__avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; display: block; }
+  #shopify-section-{{ section.id }} .lp-testimonials__stars { color: #c9933a; font-size: 18px; margin-bottom: 8px; }
+  #shopify-section-{{ section.id }} .lp-testimonials__name { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: {{ section.settings.subheading_size }}px; font-weight: 400; color: {{ section.settings.subheading_color }}; margin-bottom: 2px; text-transform: none; font-variant: normal; }
+  #shopify-section-{{ section.id }} .lp-testimonials__title { font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: {{ section.settings.body_size }}px; color: #888; margin-bottom: 12px; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-testimonials__quote { font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: {{ section.settings.body_size }}px; color: {{ section.settings.body_color }}; line-height: 1.6; font-style: italic; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-testimonials__photo { width: 100%; border-radius: var(--lp-btn-radius, 10px); object-fit: cover; aspect-ratio: 4/3; }
+  #shopify-section-{{ section.id }} .lp-testimonials__photo-placeholder { width: 100%; border-radius: var(--lp-btn-radius, 10px); background: #e0d4ae; aspect-ratio: 4/3; }
+  #shopify-section-{{ section.id }} .lp-testimonials__cta-wrap { text-align: center; margin-top: 8px; }
+  #shopify-section-{{ section.id }} .lp-btn {
+    background: {{ section.settings.btn_bg_color }} !important;
+    color: {{ section.settings.btn_text_color }} !important;
+    font-size: {{ section.settings.btn_text_size }}px !important;
+    border-radius: {{ section.settings.btn_radius }}px !important;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-family: var(--lp-font-body, 'Inter', sans-serif) !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s !important;
+  }
+  #shopify-section-{{ section.id }} .lp-btn:hover { opacity: 0.88 !important; }
+  @media (max-width: 768px) { #shopify-section-{{ section.id }} .lp-testimonials__row { grid-template-columns: 1fr; } }
+{% endstyle %}
+
+<div class="lp-testimonials">
+  {% if section.settings.eyebrow != blank %}
+    <span class="lp-testimonials__eyebrow">{{ section.settings.eyebrow }}</span>
+  {% endif %}
+  <h2 class="lp-testimonials__headline">{{ section.settings.headline }}</h2>
+  <div class="lp-testimonials__row">
+    <div class="lp-testimonials__card">
+      {% if section.settings.t1_avatar %}<img src="{{ section.settings.t1_avatar | image_url: width: 120 }}" alt="{{ section.settings.t1_name }}" class="lp-testimonials__avatar">{% endif %}
+      <div class="lp-testimonials__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="lp-testimonials__name">{{ section.settings.t1_name }}</div>
+      <div class="lp-testimonials__title">{{ section.settings.t1_title }}</div>
+      <div class="lp-testimonials__quote">{{ section.settings.t1_quote }}</div>
+    </div>
+    {% if section.settings.photo1 %}<img src="{{ section.settings.photo1 | image_url: width: 600 }}" alt="" class="lp-testimonials__photo">{% else %}<div class="lp-testimonials__photo-placeholder"></div>{% endif %}
+    <div class="lp-testimonials__card">
+      {% if section.settings.t2_avatar %}<img src="{{ section.settings.t2_avatar | image_url: width: 120 }}" alt="{{ section.settings.t2_name }}" class="lp-testimonials__avatar">{% endif %}
+      <div class="lp-testimonials__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="lp-testimonials__name">{{ section.settings.t2_name }}</div>
+      <div class="lp-testimonials__title">{{ section.settings.t2_title }}</div>
+      <div class="lp-testimonials__quote">{{ section.settings.t2_quote }}</div>
+    </div>
+    {% if section.settings.photo2 %}<img src="{{ section.settings.photo2 | image_url: width: 600 }}" alt="" class="lp-testimonials__photo">{% else %}<div class="lp-testimonials__photo-placeholder"></div>{% endif %}
+  </div>
+  <div class="lp-testimonials__row">
+    <div class="lp-testimonials__card">
+      {% if section.settings.t3_avatar %}<img src="{{ section.settings.t3_avatar | image_url: width: 120 }}" alt="{{ section.settings.t3_name }}" class="lp-testimonials__avatar">{% endif %}
+      <div class="lp-testimonials__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="lp-testimonials__name">{{ section.settings.t3_name }}</div>
+      <div class="lp-testimonials__title">{{ section.settings.t3_title }}</div>
+      <div class="lp-testimonials__quote">{{ section.settings.t3_quote }}</div>
+    </div>
+    {% if section.settings.photo3 %}<img src="{{ section.settings.photo3 | image_url: width: 600 }}" alt="" class="lp-testimonials__photo">{% else %}<div class="lp-testimonials__photo-placeholder"></div>{% endif %}
+    <div class="lp-testimonials__card">
+      {% if section.settings.t4_avatar %}<img src="{{ section.settings.t4_avatar | image_url: width: 120 }}" alt="{{ section.settings.t4_name }}" class="lp-testimonials__avatar">{% endif %}
+      <div class="lp-testimonials__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="lp-testimonials__name">{{ section.settings.t4_name }}</div>
+      <div class="lp-testimonials__title">{{ section.settings.t4_title }}</div>
+      <div class="lp-testimonials__quote">{{ section.settings.t4_quote }}</div>
+    </div>
+    {% if section.settings.photo4 %}<img src="{{ section.settings.photo4 | image_url: width: 600 }}" alt="" class="lp-testimonials__photo">{% else %}<div class="lp-testimonials__photo-placeholder"></div>{% endif %}
+  </div>
+  {% if section.settings.cta_text != blank %}
+    <div class="lp-testimonials__cta-wrap">
+      <a href="{{ section.settings.cta_url }}" class="lp-btn">{{ section.settings.cta_text }}</a>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "LP Testimonials",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Client Success Stories"},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Real results from lifestyle brands we've transformed"},
+    {"type": "header", "content": "Testimonial 1"},
+    {"type": "image_picker", "id": "t1_avatar", "label": "Avatar"},
+    {"type": "text", "id": "t1_name", "label": "Name", "default": "Bryan Johnston"},
+    {"type": "text", "id": "t1_title", "label": "Title"},
+    {"type": "textarea", "id": "t1_quote", "label": "Quote"},
+    {"type": "image_picker", "id": "photo1", "label": "Photo (shown next to Testimonial 1)"},
+    {"type": "header", "content": "Testimonial 2"},
+    {"type": "image_picker", "id": "t2_avatar", "label": "Avatar"},
+    {"type": "text", "id": "t2_name", "label": "Name", "default": "Xunjie Zhang"},
+    {"type": "text", "id": "t2_title", "label": "Title"},
+    {"type": "textarea", "id": "t2_quote", "label": "Quote"},
+    {"type": "image_picker", "id": "photo2", "label": "Photo (shown next to Testimonial 2)"},
+    {"type": "header", "content": "Testimonial 3"},
+    {"type": "image_picker", "id": "t3_avatar", "label": "Avatar"},
+    {"type": "text", "id": "t3_name", "label": "Name", "default": "Josh Reed"},
+    {"type": "text", "id": "t3_title", "label": "Title", "default": "Owner"},
+    {"type": "textarea", "id": "t3_quote", "label": "Quote"},
+    {"type": "image_picker", "id": "photo3", "label": "Photo (shown next to Testimonial 3)"},
+    {"type": "header", "content": "Testimonial 4"},
+    {"type": "image_picker", "id": "t4_avatar", "label": "Avatar"},
+    {"type": "text", "id": "t4_name", "label": "Name", "default": "Doltyn Snedden"},
+    {"type": "text", "id": "t4_title", "label": "Title", "default": "Consultant Lynyrd Skynyrd"},
+    {"type": "textarea", "id": "t4_quote", "label": "Quote"},
+    {"type": "image_picker", "id": "photo4", "label": "Photo (shown next to Testimonial 4)"},
+    {"type": "header", "content": "End of section CTA"},
+    {"type": "text", "id": "cta_text", "label": "Button text", "default": "Get your media plan"},
+    {"type": "url", "id": "cta_url", "label": "Button URL"},
+    {"type": "header", "content": "Eyebrow Style"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#d18285"},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size (px)", "min": 10, "max": 24, "step": 1, "default": 13},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 56},
+    {"type": "header", "content": "Subheading Style (name)"},
+    {"type": "color", "id": "subheading_color", "label": "Name color", "default": "#0a0a0a"},
+    {"type": "range", "id": "subheading_size", "label": "Name size (px)", "min": 14, "max": 32, "step": 1, "default": 20},
+    {"type": "header", "content": "Body Style"},
+    {"type": "color", "id": "body_color", "label": "Body color", "default": "#555555"},
+    {"type": "range", "id": "body_size", "label": "Body size (px)", "min": 12, "max": 28, "step": 1, "default": 15},
+    {"type": "header", "content": "Button Style"},
+    {"type": "color", "id": "btn_bg_color", "label": "Button background", "default": "#d18285"},
+    {"type": "color", "id": "btn_text_color", "label": "Button text color", "default": "#ffffff"},
+    {"type": "range", "id": "btn_text_size", "label": "Button text size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "range", "id": "btn_radius", "label": "Corner radius (px)", "min": 0, "max": 40, "step": 1, "default": 10},
+    {"type": "range", "id": "btn_padding_v", "label": "Vertical padding (px)", "min": 8, "max": 40, "step": 2, "default": 16},
+    {"type": "range", "id": "btn_padding_h", "label": "Horizontal padding (px)", "min": 16, "max": 80, "step": 4, "default": 40}
+  ],
+  "presets": [{"name": "LP Testimonials"}]
+}
+{% endschema %}

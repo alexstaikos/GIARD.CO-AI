@@ -1,0 +1,107 @@
+{% style %}
+  #shopify-section-{{ section.id }} { background: {{ section.settings.bg_color }}; padding: var(--lp-section-padding, 80px) 24px 32px; }
+  #shopify-section-{{ section.id }} .lp-exp__inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  #shopify-section-{{ section.id }} .lp-exp__headline { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: clamp(24px, 3.5vw, {{ section.settings.heading_size }}px); font-weight: 400; color: {{ section.settings.heading_color }}; line-height: 1.05; margin-bottom: 32px; text-transform: none; font-variant: normal; }
+  #shopify-section-{{ section.id }} .lp-exp__item { margin-bottom: 28px; }
+  #shopify-section-{{ section.id }} .lp-exp__item-title { font-family: var(--lp-font-heading, 'Anton', Georgia, serif); font-size: {{ section.settings.subheading_size }}px; font-weight: 400; color: {{ section.settings.subheading_color }}; margin-bottom: 4px; text-transform: none; font-variant: normal; }
+  #shopify-section-{{ section.id }} .lp-exp__item-body { font-family: var(--lp-font-body, 'Inter', sans-serif); font-size: {{ section.settings.body_size }}px; color: {{ section.settings.body_color }}; line-height: 1.6; text-transform: none; }
+  #shopify-section-{{ section.id }} .lp-exp__collage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  #shopify-section-{{ section.id }} .lp-exp__collage-img { width: 100%; border-radius: var(--lp-btn-radius, 10px); object-fit: cover; aspect-ratio: 1/1; display: block; }
+  #shopify-section-{{ section.id }} .lp-exp__collage-img--wide { grid-column: span 2; aspect-ratio: 2/1; }
+  #shopify-section-{{ section.id }} .lp-exp__placeholder { width: 100%; border-radius: var(--lp-btn-radius, 10px); background: #e0d4ae; aspect-ratio: 1/1; }
+  @media (max-width: 768px) { #shopify-section-{{ section.id }} .lp-exp__inner { grid-template-columns: 1fr; } }
+{% endstyle %}
+
+<div class="lp-exp">
+  <div class="lp-exp__inner">
+    <div class="lp-exp__left">
+      <h2 class="lp-exp__headline">{{ section.settings.headline | default: 'Our expertise' }}</h2>
+      {% for i in (1..6) %}
+        {% assign title_key = 'item' | append: i | append: '_title' %}
+        {% assign body_key = 'item' | append: i | append: '_body' %}
+        {% if section.settings[title_key] != blank %}
+          <div class="lp-exp__item">
+            <div class="lp-exp__item-title">{{ section.settings[title_key] }}</div>
+            <div class="lp-exp__item-body">{{ section.settings[body_key] }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="lp-exp__right">
+      <div class="lp-exp__collage">
+        {% assign has_images = false %}
+        {% for i in (1..4) %}
+          {% assign img_key = 'collage' | append: i %}
+          {% assign video_key = 'collage' | append: i | append: '_video' %}
+          {% assign img = section.settings[img_key] %}
+          {% assign video = section.settings[video_key] %}
+          {% if video or img %}
+            {% assign has_images = true %}
+            {% assign img_class = 'lp-exp__collage-img' %}
+            {% if i == 1 %}{% assign img_class = 'lp-exp__collage-img lp-exp__collage-img--wide' %}{% endif %}
+            {% if video %}
+              {{ video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: img_class }}
+            {% else %}
+              <img src="{{ img | image_url: width: 900 }}" alt="" class="{{ img_class }}">
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% unless has_images %}
+          <div style="grid-column:span 2;aspect-ratio:2/1;background:#e0d4ae;border-radius:var(--lp-btn-radius,10px);"></div>
+          <div class="lp-exp__placeholder"></div>
+          <div class="lp-exp__placeholder"></div>
+        {% endunless %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LP Expertise Split",
+  "settings": [
+    {"type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff"},
+    {"type": "text", "id": "headline", "label": "Headline", "default": "Our expertise"},
+    {"type": "header", "content": "Item 1"},
+    {"type": "text", "id": "item1_title", "label": "Title", "default": "Market Positioning & Brand Communication Strategy"},
+    {"type": "textarea", "id": "item1_body", "label": "Body", "default": "Develop unique brand positioning that allows you to charge premium prices while building customer loyalty."},
+    {"type": "header", "content": "Item 2"},
+    {"type": "text", "id": "item2_title", "label": "Title", "default": "Media Operations"},
+    {"type": "textarea", "id": "item2_body", "label": "Body", "default": "Develop unique brand positioning that allows you to charge premium prices while building customer loyalty."},
+    {"type": "header", "content": "Item 3"},
+    {"type": "text", "id": "item3_title", "label": "Title", "default": "Product-Marketing Integration"},
+    {"type": "textarea", "id": "item3_body", "label": "Body", "default": "Leverage our product development background to align marketing timelines with product launches."},
+    {"type": "header", "content": "Item 4"},
+    {"type": "text", "id": "item4_title", "label": "Title", "default": "Multi-Channel Conversion Optimization"},
+    {"type": "textarea", "id": "item4_body", "label": "Body", "default": "Create marketing collateral optimized for both paid and organic distribution."},
+    {"type": "header", "content": "Item 5"},
+    {"type": "text", "id": "item5_title", "label": "Title"},
+    {"type": "textarea", "id": "item5_body", "label": "Body"},
+    {"type": "header", "content": "Item 6"},
+    {"type": "text", "id": "item6_title", "label": "Title"},
+    {"type": "textarea", "id": "item6_body", "label": "Body"},
+    {"type": "header", "content": "Collage 1 (wide, top)"},
+    {"type": "image_picker", "id": "collage1", "label": "Image 1"},
+    {"type": "video", "id": "collage1_video", "label": "Video 1 (overrides image)"},
+    {"type": "header", "content": "Collage 2 (bottom left)"},
+    {"type": "image_picker", "id": "collage2", "label": "Image 2"},
+    {"type": "video", "id": "collage2_video", "label": "Video 2 (overrides image)"},
+    {"type": "header", "content": "Collage 3 (bottom right)"},
+    {"type": "image_picker", "id": "collage3", "label": "Image 3"},
+    {"type": "video", "id": "collage3_video", "label": "Video 3 (overrides image)"},
+    {"type": "header", "content": "Collage 4 (optional)"},
+    {"type": "image_picker", "id": "collage4", "label": "Image 4"},
+    {"type": "video", "id": "collage4_video", "label": "Video 4 (overrides image)"},
+    {"type": "header", "content": "Heading Style"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 56},
+    {"type": "header", "content": "Subheading Style"},
+    {"type": "color", "id": "subheading_color", "label": "Subheading color", "default": "#0a0a0a"},
+    {"type": "range", "id": "subheading_size", "label": "Subheading size (px)", "min": 14, "max": 48, "step": 1, "default": 22},
+    {"type": "header", "content": "Body Style"},
+    {"type": "color", "id": "body_color", "label": "Body color", "default": "#555555"},
+    {"type": "range", "id": "body_size", "label": "Body size (px)", "min": 12, "max": 28, "step": 1, "default": 16}
+  ],
+  "presets": [{"name": "LP Expertise Split"}]
+}
+{% endschema %}

@@ -1,0 +1,730 @@
+{% doc %}
+  @prompt
+    I want to make a media collage section here with media blocked for each brand in rectangles. I want to be able to have cover images and titles for each brands or centered logos if I choose to upload them. I want the videos to all have adjustable corner radiuses. I need to be able to add or remove brands from this section so make sure I have that ability as well. I need to upload videos directly, no urls. I also want nice organized gaps between each video but I also want the vidoes to fit nicley within their respective blocks, no overlays, no blank space, just videos that fill out their input boxes. , can we make the media collage 2 colums wide and have rectangles instead of squares, i cant see the vidoes im uploading, fix this , this is good but last thing I need is for the cover image to always show unless someone hovers over the video. Same goes with the logo, Once you hover, the cover image and logo go away
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-brand-collage-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px 0;
+  }
+
+  .ai-brand-collage__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.gap_size }}px;
+    width: 100%;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ block.settings.aspect_ratio }};
+    overflow: hidden;
+    border-radius: {{ block.settings.corner_radius }}px;
+    background-color: {{ block.settings.placeholder_bg_color }};
+    cursor: pointer;
+  }
+
+  .ai-brand-collage__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:hover .ai-brand-collage__video-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-brand-collage__cover-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:hover .ai-brand-collage__cover-{{ ai_gen_id }} {
+    opacity: 0;
+  }
+
+  .ai-brand-collage__logo-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
+    max-height: 60%;
+    object-fit: contain;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:hover .ai-brand-collage__logo-{{ ai_gen_id }} {
+    opacity: 0;
+  }
+
+  .ai-brand-collage__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: {{ block.settings.text_padding }}px;
+    background: linear-gradient(to top, rgba(0, 0, 0, {{ block.settings.overlay_opacity }}), transparent);
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-brand-collage__item-{{ ai_gen_id }}:hover .ai-brand-collage__overlay-{{ ai_gen_id }} {
+    opacity: 0;
+  }
+
+  .ai-brand-collage__title-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0;
+    text-align: center;
+  }
+
+  .ai-brand-collage__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.placeholder_text_color }};
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-brand-collage__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+      gap: {{ block.settings.gap_size | times: 0.7 }}px;
+    }
+
+    .ai-brand-collage__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<brand-collage-{{ ai_gen_id }} class="ai-brand-collage-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-brand-collage__grid-{{ ai_gen_id }}">
+    {% for i in (1..12) %}
+      {% liquid
+        assign video_key = 'brand_' | append: i | append: '_video'
+        assign cover_key = 'brand_' | append: i | append: '_cover'
+        assign logo_key = 'brand_' | append: i | append: '_logo'
+        assign title_key = 'brand_' | append: i | append: '_title'
+        assign show_key = 'show_brand_' | append: i
+
+        assign video = block.settings[video_key]
+        assign cover = block.settings[cover_key]
+        assign logo = block.settings[logo_key]
+        assign title = block.settings[title_key]
+        assign show_brand = block.settings[show_key]
+      %}
+
+      {% if show_brand %}
+        <div class="ai-brand-collage__item-{{ ai_gen_id }}" data-item-index="{{ i }}">
+          {% if video != blank and video.sources != blank and video.sources.size > 0 %}
+            <video
+              class="ai-brand-collage__video-{{ ai_gen_id }}"
+              muted
+              loop
+              playsinline
+            >
+              {% for source in video.sources %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endfor %}
+            </video>
+          {% endif %}
+
+          {% if cover != blank %}
+            <img
+              src="{{ cover | image_url: width: 800 }}"
+              alt="{{ title | escape }}"
+              class="ai-brand-collage__cover-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% endif %}
+
+          {% if logo != blank %}
+            <img
+              src="{{ logo | image_url: width: 400 }}"
+              alt="{{ title | escape }}"
+              class="ai-brand-collage__logo-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% endif %}
+
+          {% if title != blank and logo == blank %}
+            <div class="ai-brand-collage__overlay-{{ ai_gen_id }}">
+              <h3 class="ai-brand-collage__title-{{ ai_gen_id }}">{{ title }}</h3>
+            </div>
+          {% endif %}
+
+          {% if video == blank and cover == blank %}
+            <div class="ai-brand-collage__placeholder-{{ ai_gen_id }}">
+              Add video or cover image
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</brand-collage-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BrandCollage{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('.ai-brand-collage__item-{{ ai_gen_id }}');
+        this.setupHoverEffects();
+      }
+
+      setupHoverEffects() {
+        this.items.forEach((item) => {
+          const video = item.querySelector('.ai-brand-collage__video-{{ ai_gen_id }}');
+          
+          if (video) {
+            item.addEventListener('mouseenter', () => {
+              video.currentTime = 0;
+              video.play().catch(() => {});
+            });
+
+            item.addEventListener('mouseleave', () => {
+              video.pause();
+              video.currentTime = 0;
+            });
+          }
+        });
+      }
+    }
+
+    customElements.define('brand-collage-{{ ai_gen_id }}', BrandCollage{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Brand media collage",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "gap_size",
+      "label": "Gap between items",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Item aspect ratio",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/3", "label": "Landscape (4:3)" },
+        { "value": "16/9", "label": "Wide (16:9)" },
+        { "value": "3/4", "label": "Portrait (3:4)" }
+      ],
+      "default": "4/3"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Placeholder background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_text_color",
+      "label": "Placeholder text",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "Text overlay"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_padding",
+      "label": "Text padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.7
+    },
+    {
+      "type": "header",
+      "content": "Brand 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_1",
+      "label": "Show brand 1",
+      "default": true
+    },
+    {
+      "type": "video",
+      "id": "brand_1_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_1_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_1_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_1_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_2",
+      "label": "Show brand 2",
+      "default": true
+    },
+    {
+      "type": "video",
+      "id": "brand_2_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_2_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_2_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_2_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_3",
+      "label": "Show brand 3",
+      "default": true
+    },
+    {
+      "type": "video",
+      "id": "brand_3_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_3_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_3_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_3_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_4",
+      "label": "Show brand 4",
+      "default": true
+    },
+    {
+      "type": "video",
+      "id": "brand_4_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_4_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_4_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_4_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_5",
+      "label": "Show brand 5",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_5_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_5_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_5_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_5_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_6",
+      "label": "Show brand 6",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_6_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_6_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_6_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_6_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_7",
+      "label": "Show brand 7",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_7_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_7_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_7_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_7_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 8"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_8",
+      "label": "Show brand 8",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_8_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_8_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_8_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_8_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 9"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_9",
+      "label": "Show brand 9",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_9_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_9_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_9_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_9_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 10"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_10",
+      "label": "Show brand 10",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_10_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_10_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_10_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_10_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 11"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_11",
+      "label": "Show brand 11",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_11_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_11_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_11_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_11_title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Brand 12"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_12",
+      "label": "Show brand 12",
+      "default": false
+    },
+    {
+      "type": "video",
+      "id": "brand_12_video",
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_12_cover",
+      "label": "Cover image"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_12_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_12_title",
+      "label": "Title"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand media collage"
+    }
+  ]
+}
+{% endschema %}

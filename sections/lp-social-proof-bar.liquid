@@ -1,0 +1,27 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: var(--lp-section-padding, 80px) 24px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lp-spb__avatars { display:flex; justify-content:center; margin-bottom:12px; }
+  #shopify-section-{{ section.id }} .lp-spb__avatar { width:52px; height:52px; border-radius:50%; border:3px solid #fff; margin:0 -6px; background:#e0d4ae; object-fit:cover; display:block; }
+  #shopify-section-{{ section.id }} .lp-spb__stars { color:#c9933a; font-size:20px; margin-bottom:6px; }
+  #shopify-section-{{ section.id }} .lp-spb__rating { font-family:var(--lp-font-body,'Items-Condensed',sans-serif); font-size:var(--lp-body-size,16px); color:var(--lp-body-color,#555); margin-bottom:40px; }
+  #shopify-section-{{ section.id }} .lp-spb__eyebrow { color:var(--lp-salmon,#d18285); font-family:var(--lp-font-eyebrow,'TG-Condensed',sans-serif); font-size:var(--lp-eyebrow-size,13px); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; display:block; }
+  #shopify-section-{{ section.id }} .lp-spb__headline { font-family:var(--lp-font-heading,'Anton',Georgia,serif); font-size:clamp(28px,4vw,var(--lp-heading-size,64px)); font-weight:400; color:var(--lp-black,#0a0a0a); line-height:1.0; max-width:800px; margin:0 auto 36px; }
+{% endstyle %}
+<div class="lp-spb">
+  <div class="lp-spb__avatars">
+    {% if section.settings.avatar1 %}<img src="{{ section.settings.avatar1 | image_url: width: 120 }}" alt="" class="lp-spb__avatar">{% else %}<div class="lp-spb__avatar"></div>{% endif %}
+    {% if section.settings.avatar2 %}<img src="{{ section.settings.avatar2 | image_url: width: 120 }}" alt="" class="lp-spb__avatar">{% else %}<div class="lp-spb__avatar"></div>{% endif %}
+  </div>
+  <div class="lp-spb__stars">★★★★★</div>
+  <div class="lp-spb__rating"><strong>4.9</strong> from lifestyle brand clients</div>
+  {% if section.settings.eyebrow != blank %}<span class="lp-spb__eyebrow">{{ section.settings.eyebrow }}</span>{% endif %}
+  <h2 class="lp-spb__headline">{{ section.settings.headline }}</h2>
+  <a href="{{ section.settings.cta_url }}" class="lp-btn">{{ section.settings.cta_text }}</a>
+</div>
+{% schema %}
+{"name":"LP Social Proof Bar","settings":[{"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},{"type":"header","content":"Avatars"},{"type":"image_picker","id":"avatar1","label":"Avatar 1"},{"type":"image_picker","id":"avatar2","label":"Avatar 2"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Unlock a Few Simple Ways To Charge 20-30% Higher Product Pricing Strategy"},{"type":"text","id":"headline","label":"Headline","default":"Most strategies end where execution begins. We connect the two."},{"type":"text","id":"cta_text","label":"Button text","default":"Book your strategy call now"},{"type":"url","id":"cta_url","label":"Button URL"}],"presets":[{"name":"LP Social Proof Bar"}]}
+{% endschema %}

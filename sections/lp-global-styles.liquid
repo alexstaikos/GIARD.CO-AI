@@ -1,0 +1,173 @@
+{% assign body_font = settings.type_body_font %}
+
+{{ body_font | font_face: font_display: 'swap' }}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
+{% style %}
+  /* ---- Overflow fix: no horizontal scroll on any LP section ---- */
+  .shopify-section [class^="lp-"],
+  .shopify-section [class*=" lp-"] {
+    box-sizing: border-box;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  .lp-hero, .lp-about, .lp-approach, .lp-svc, .lp-ctamid,
+  .lp-finalcta, .lp-hiw, .lp-faq, .lp-exp, .lp-testimonials,
+  .lp-spb, .lp-logos {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  :root {
+    --lp-font-heading: 'Anton', Georgia, serif;
+    --lp-font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+    --lp-heading-size: {{ section.settings.heading_size }}px;
+    --lp-subheading-size: {{ section.settings.subheading_size }}px;
+    --lp-body-size: {{ section.settings.body_size }}px;
+    --lp-eyebrow-size: {{ section.settings.eyebrow_size }}px;
+    --lp-btn-radius: {{ section.settings.btn_radius }}px;
+    --lp-section-padding: {{ section.settings.section_padding }}px;
+    --lp-black: {{ section.settings.heading_color }};
+    --lp-subheading-color: {{ section.settings.subheading_color }};
+    --lp-body-color: {{ section.settings.body_color }};
+    --lp-salmon: {{ section.settings.eyebrow_color }};
+    --lp-burgundy: {{ section.settings.btn_color }};
+    --lp-btn-text-color: {{ section.settings.btn_text_color }};
+    --lp-btn-size: {{ section.settings.btn_text_size }}px;
+    --lp-white: #ffffff;
+    --lp-cream: #e0d4ae;
+    --lp-icon-bg: {{ section.settings.icon_bg_color }};
+    --lp-icon-color: {{ section.settings.icon_color }};
+  }
+
+  /* ---- Headings ---- */
+  .lp-hero__headline, .lp-spb__headline, .lp-about__headline,
+  .lp-approach__headline, .lp-svc__headline, .lp-ctamid__headline,
+  .lp-finalcta__headline, .lp-hiw__headline, .lp-faq__headline,
+  .lp-exp__headline, .lp-testimonials__headline {
+    font-family: var(--lp-font-heading) !important;
+    font-weight: 400 !important;
+    line-height: 1.05 !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-variant-caps: normal !important;
+    color: var(--lp-black) !important;
+  }
+
+  /* ---- Subheadings ---- */
+  .lp-svc__title, .lp-hiw__step-title, .lp-faq__question,
+  .lp-exp__item-title, .lp-testimonials__name {
+    font-family: var(--lp-font-heading) !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-variant-caps: normal !important;
+    color: var(--lp-subheading-color) !important;
+  }
+
+  /* ---- Body ---- */
+  .lp-approach__body, .lp-svc__body, .lp-hiw__step-body,
+  .lp-faq__answer, .lp-exp__item-body, .lp-testimonials__quote,
+  .lp-ctamid__body, .lp-finalcta__body, .lp-spb__rating,
+  .lp-testimonials__title, .lp-logos__label {
+    font-family: var(--lp-font-body) !important;
+    color: var(--lp-body-color) !important;
+    line-height: 1.7 !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+  }
+
+  /* ---- Eyebrows ---- */
+  .lp-hero__eyebrow, .lp-spb__eyebrow, .lp-about__eyebrow,
+  .lp-svc__eyebrow, .lp-ctamid__eyebrow, .lp-hiw__eyebrow,
+  .lp-faq__eyebrow, .lp-testimonials__eyebrow {
+    font-family: var(--lp-font-body) !important;
+    color: var(--lp-salmon) !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    font-variant-caps: normal !important;
+    letter-spacing: 0.02em !important;
+    font-weight: 400 !important;
+    display: block !important;
+  }
+
+  /* ---- Global button styles ---- */
+  .lp-btn {
+    background: var(--lp-burgundy) !important;
+    color: var(--lp-btn-text-color) !important;
+    font-family: var(--lp-font-body) !important;
+    font-size: var(--lp-btn-size) !important;
+    padding: 16px 40px !important;
+    border-radius: var(--lp-btn-radius) !important;
+    text-transform: none !important;
+    font-variant: normal !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s !important;
+  }
+  .lp-btn:hover { opacity: 0.88 !important; }
+
+  /* ---- Global icon badge styles (Approach, Services, How It Works) ---- */
+  .lp-icon-badge {
+    background: var(--lp-icon-bg) !important;
+    color: var(--lp-icon-color) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+  }
+  .lp-icon-badge__media {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    display: block !important;
+  }
+  .lp-icon-badge__glyph {
+    filter: grayscale(1) brightness(0) invert(1) !important;
+  }
+  .lp-icon-svg {
+    width: 52% !important;
+    height: 52% !important;
+    stroke: var(--lp-icon-color) !important;
+    display: block !important;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "LP Global Styles",
+  "settings": [
+    {"type": "paragraph", "content": "Heading font is Anton (Google Fonts). Body font is set in Theme Settings → Typography."},
+    {"type": "header", "content": "Font Sizes"},
+    {"type": "range", "id": "heading_size", "label": "Heading size (px)", "min": 24, "max": 120, "step": 2, "default": 64},
+    {"type": "range", "id": "subheading_size", "label": "Subheading size (px)", "min": 14, "max": 48, "step": 1, "default": 22},
+    {"type": "range", "id": "body_size", "label": "Body size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size (px)", "min": 10, "max": 20, "step": 1, "default": 13},
+    {"type": "header", "content": "Colors"},
+    {"type": "color", "id": "heading_color", "label": "Heading color", "default": "#0a0a0a"},
+    {"type": "color", "id": "subheading_color", "label": "Subheading color", "default": "#0a0a0a"},
+    {"type": "color", "id": "body_color", "label": "Body text color", "default": "#555555"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#d18285"},
+    {"type": "header", "content": "Icon Badge Colors (sitewide)"},
+    {"type": "color", "id": "icon_bg_color", "label": "Icon badge background", "default": "#F6D9DC"},
+    {"type": "color", "id": "icon_color", "label": "Icon glyph color", "default": "#ffffff"},
+    {"type": "header", "content": "Global Button Style"},
+    {"type": "color", "id": "btn_color", "label": "Button background", "default": "#65222d"},
+    {"type": "color", "id": "btn_text_color", "label": "Button text color", "default": "#ffffff"},
+    {"type": "range", "id": "btn_text_size", "label": "Button text size (px)", "min": 12, "max": 24, "step": 1, "default": 16},
+    {"type": "header", "content": "Spacing"},
+    {"type": "range", "id": "btn_radius", "label": "Button corner radius (px)", "min": 0, "max": 40, "step": 1, "default": 10},
+    {"type": "range", "id": "section_padding", "label": "Section vertical padding (px)", "min": 40, "max": 160, "step": 8, "default": 80}
+  ],
+  "presets": [{"name": "LP Global Styles"}]
+}
+{% endschema %}

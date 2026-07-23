@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+@font-face {
+  font-family: 'Aro-Wide';
+  src: url('https://cdn.shopify.com/s/files/1/0987/3847/1217/files/Aro-Wide_51d00c7a-ab9f-4046-9108-bae65a507b67.woff2?v=1782482198') format('woff2'),
+       url('https://cdn.shopify.com/s/files/1/0987/3847/1217/files/Aro-Wide_502cf583-d198-4831-9080-0f7b13adba49.woff?v=1782482198') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aro-Condensed';
+  src: url('https://cdn.shopify.com/s/files/1/0987/3847/1217/files/Aro-Condensed_c38c007f-a7dd-483a-8533-3243c228fd7b.woff2?v=1782482198') format('woff2'),
+       url('https://cdn.shopify.com/s/files/1/0987/3847/1217/files/Aro-Condensed_7146313d-5610-45ad-ac39-552bc47f1620.woff?v=1782482198') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Items-Condensed';
+  src: url('https://cdn.shopify.com/s/files/1/0987/3847/1217/files/Items-CondensedRegular_a675fbbf-bce4-4db3-b786-c0e59bc738b7.woff2?v=1782482198') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TG-Condensed';
+  src: url('https://cdn.shopify.com/s/files/1/0987/3847/1217/files/TG-CondensedRegular_2cb0fa2b-06f2-40bb-8c84-bca4620f34d6.woff?v=1782482198') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
